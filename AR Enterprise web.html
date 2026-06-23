@@ -1,0 +1,2919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Enterprise – Envelope, Paper Bag & Printing Works</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dark: #8b6914;
+    --ink: #1a1208;
+    --parchment: #f8f1e4;
+    --cream: #fdf8ef;
+    --brown: #3d2b1f;
+    --sienna: #8b4513;
+    --white: #ffffff;
+    --gray: #6b6258;
+    --shadow: rgba(26,18,8,0.15);
+
+    /* Theme tokens */
+    --bg: #fdf8ef;
+    --bg-card: #ffffff;
+    --bg-section-alt: #f8f1e4;
+    --text-primary: #1a1208;
+    --text-secondary: #6b6258;
+    --text-light: #ffffff;
+    --border: rgba(201,168,76,0.2);
+    --input-bg: #ffffff;
+    --input-border: rgba(201,168,76,0.35);
+    --nav-scrolled: rgba(26,18,8,0.96);
+    --card-shadow: rgba(26,18,8,0.08);
+  }
+
+  html.dark {
+    --bg: #0f0c08;
+    --bg-card: #1c1710;
+    --bg-section-alt: #161209;
+    --text-primary: #f0e6cc;
+    --text-secondary: #a89880;
+    --text-light: #f0e6cc;
+    --border: rgba(201,168,76,0.25);
+    --input-bg: #1c1710;
+    --input-border: rgba(201,168,76,0.3);
+    --nav-scrolled: rgba(10,8,4,0.97);
+    --card-shadow: rgba(0,0,0,0.4);
+    --ink: #f0e6cc;
+    --cream: #0f0c08;
+    --parchment: #161209;
+    --white: #1c1710;
+    --gray: #a89880;
+    --brown: #c9a84c;
+    --shadow: rgba(0,0,0,0.35);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* ─── THEME TOGGLE BUTTON ─── */
+  #theme-toggle {
+    width: 44px; height: 24px;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(201,168,76,0.5);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.3s, border-color 0.3s;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+  }
+  #theme-toggle:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+  #theme-toggle .toggle-knob {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    position: absolute;
+    left: 2px;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; line-height: 1;
+  }
+  html.dark #theme-toggle .toggle-knob {
+    transform: translateX(20px);
+  }
+  #theme-toggle .toggle-icon-sun,
+  #theme-toggle .toggle-icon-moon {
+    position: absolute;
+    font-size: 9px;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  #theme-toggle .toggle-icon-sun  { right: 4px; opacity: 1; }
+  #theme-toggle .toggle-icon-moon { left: 4px;  opacity: 0; }
+  html.dark #theme-toggle .toggle-icon-sun  { opacity: 0; }
+  html.dark #theme-toggle .toggle-icon-moon { opacity: 1; }
+
+  /* ─── DARK MODE OVERRIDES ─── */
+  html.dark body { background: var(--bg); color: var(--text-primary); }
+
+  html.dark nav.scrolled { background: var(--nav-scrolled); }
+
+  html.dark .nav-links a { color: rgba(240,230,204,0.75); }
+
+  html.dark section,
+  html.dark #about,
+  html.dark #products,
+  html.dark #payment,
+  html.dark #contact,
+  html.dark #order {
+    background: var(--bg);
+  }
+
+  html.dark #services {
+    background: #0d0a06;
+  }
+
+  html.dark .about-text p,
+  html.dark .hero-sub { color: var(--text-secondary); }
+
+  html.dark .product-card,
+  html.dark .payment-card,
+  html.dark .service-card {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text-primary);
+  }
+
+  html.dark .product-card h3,
+  html.dark .service-card h3 { color: var(--text-primary); }
+
+  html.dark .product-card p,
+  html.dark .service-card p,
+  html.dark .payment-desc { color: var(--text-secondary); }
+
+  html.dark input,
+  html.dark select,
+  html.dark textarea {
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text-primary) !important;
+  }
+  html.dark input::placeholder,
+  html.dark textarea::placeholder { color: var(--text-secondary) !important; }
+  html.dark select option { background: #1c1710; color: var(--text-primary); }
+
+  html.dark .order-info,
+  html.dark .contact-left { background: #0d0a06; }
+
+  html.dark .order-form,
+  html.dark .contact-right { background: var(--bg-card); }
+
+  html.dark .section-label { color: var(--gold); }
+
+  html.dark .delivery-banner { background: #0d0a06; }
+
+  html.dark .stat-label { color: rgba(240,230,204,0.6); }
+
+  html.dark .moq-warning {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.3);
+    color: var(--gold-light);
+  }
+
+  html.dark .qr-box {
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+  html.dark .qr-box h3 { color: var(--text-primary); }
+  html.dark .qr-box p  { color: var(--text-secondary); }
+  html.dark #qr-capture-area { background: var(--bg-card) !important; }
+
+  html.dark .payment-title { color: var(--text-primary); }
+  html.dark .payment-detail { color: var(--gold); }
+
+  html.dark .marquee-track { background: #1a1208; }
+  html.dark .marquee-inner span { color: var(--gold-light); }
+
+  html.dark .success-msg {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.3);
+    color: var(--gold-light);
+  }
+
+  html.dark .mobile-menu,
+  html.dark #mobile-menu {
+    background: #0f0c08;
+  }
+  html.dark #mobile-menu a { color: rgba(240,230,204,0.8); border-color: rgba(201,168,76,0.15); }
+
+  html.dark .about-badge {
+    background: linear-gradient(135deg, #1a1208, #2c1f0a);
+    border-color: rgba(201,168,76,0.4);
+  }
+
+  html.dark #toast { background: #2c1f0a; color: var(--gold-light); border-color: rgba(201,168,76,0.3); }
+
+  html.dark .hero-chip {
+    background: rgba(201,168,76,0.15);
+    border-color: rgba(201,168,76,0.35);
+    color: var(--gold-light);
+  }
+
+  /* smooth all bg/color transitions */
+  html.dark *,
+  html *:not(script):not(style) {
+    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+  }
+
+
+
+  /* ─── GREETING OVERLAY ─── */
+  #greeting {
+    position: fixed; inset: 0;
+    background: var(--ink);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  #greeting.hide {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+  }
+  .greeting-bg {
+    position: absolute; inset:0;
+    background: radial-gradient(ellipse at 30% 50%, #2c1f0a 0%, #0f0a03 70%);
+  }
+  .greeting-lines {
+    position: absolute; inset:0;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 48px,
+      rgba(201,168,76,0.06) 48px, rgba(201,168,76,0.06) 49px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 48px,
+      rgba(201,168,76,0.04) 48px, rgba(201,168,76,0.04) 49px
+    );
+  }
+  .greeting-content {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 2rem;
+  }
+  .greeting-badge {
+    display: inline-block;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.5rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .greeting-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    color: var(--white);
+    line-height: 1;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+  .greeting-logo span { color: var(--gold); }
+  .greeting-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .greeting-divider {
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 2rem auto;
+    opacity: 0;
+    animation: fadeUp 0.9s 1.1s forwards;
+  }
+  .greeting-exp {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: fadeUp 0.9s 1.3s forwards;
+  }
+  .greeting-exp strong {
+    color: var(--gold-light);
+    font-size: 2rem;
+    display: block;
+    font-family: 'Playfair Display', serif;
+  }
+  .greeting-enter {
+    margin-top: 3rem;
+    padding: 1rem 3rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s;
+    opacity: 0;
+    animation: fadeUp 0.9s 1.6s forwards;
+  }
+  .greeting-enter::before {
+    content:'';
+    position: absolute; inset:0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+    z-index:-1;
+  }
+  .greeting-enter:hover::before { transform: scaleX(1); }
+  .greeting-enter:hover { color: var(--ink); }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed; top:0; left:0; right:0;
+    z-index: 800;
+    padding: 0 clamp(1.5rem, 4vw, 3rem);
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, box-shadow 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(26,18,8,0.96);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 30px rgba(0,0,0,0.3);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content:'';
+    position: absolute;
+    bottom: -3px; left:0; right:0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-order-btn {
+    padding: 0.55rem 1.5rem;
+    background: var(--gold);
+    color: var(--ink) !important;
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    transition: background 0.3s !important;
+  }
+  .nav-order-btn::after { display:none !important; }
+  .nav-order-btn:hover { background: var(--gold-light) !important; }
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+  }
+  .hamburger span {
+    width: 26px; height: 2px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+
+  /* ─── HERO ─── */
+  #home {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset:0;
+    background:
+      linear-gradient(135deg, rgba(26,18,8,0.92) 0%, rgba(61,43,31,0.85) 50%, rgba(139,69,19,0.7) 100%),
+      url('https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=1600') center/cover no-repeat;
+  }
+  .hero-pattern {
+    position: absolute; inset:0;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgba(201,168,76,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(201,168,76,0.1) 0%, transparent 50%);
+  }
+  .hero-content {
+    position: relative; z-index:1;
+    padding: 0 clamp(1.5rem, 6vw, 8rem);
+    max-width: 900px;
+    padding-top: 5rem;
+  }
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light);
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 0.45rem 1.2rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-chip::before {
+    content:'';
+    width:6px; height:6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .hero-h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    color: var(--white);
+    line-height: 1.08;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s forwards;
+  }
+  .hero-h1 .accent { color: var(--gold); display: block; }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.8s forwards;
+  }
+  .btn-primary {
+    padding: 0.85rem 2.5rem;
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+  }
+  .btn-outline {
+    padding: 0.85rem 2.5rem;
+    background: transparent;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.35);
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s, transform 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+    transform: translateY(-2px);
+  }
+  .hero-stats {
+    position: absolute;
+    bottom: 3rem; right: clamp(2rem, 6vw, 6rem);
+    display: flex;
+    gap: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 1s forwards;
+  }
+  .stat {
+    text-align: center;
+    color: var(--white);
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.25rem;
+  }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 8rem);
+  }
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .section-label::before {
+    content:'';
+    width: 32px; height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .section-title.light { color: var(--white); }
+  .section-title.light.shimmer-text {
+    background: linear-gradient(90deg, #fff 0%, var(--gold-light) 40%, #fff 60%, var(--gold) 80%, #fff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+    height: 520px;
+  }
+  .about-img-main {
+    position: absolute;
+    top:0; left:0;
+    width: 75%; height: 80%;
+    object-fit: cover;
+    background:
+      linear-gradient(135deg, rgba(61,43,31,0.1), transparent),
+      url('https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800') center/cover no-repeat;
+    border-radius: 2px;
+    box-shadow: 0 20px 60px rgba(26,18,8,0.15);
+  }
+  .about-img-accent {
+    position: absolute;
+    bottom:0; right:0;
+    width: 55%; height: 55%;
+    background:
+      url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600') center/cover no-repeat;
+    border-radius: 2px;
+    box-shadow: 0 20px 60px rgba(26,18,8,0.2);
+    border: 4px solid var(--white);
+  }
+  .about-badge {
+    position: absolute;
+    top: 30px; right: 20px;
+    background: var(--gold);
+    color: var(--ink);
+    text-align: center;
+    padding: 1.2rem;
+    border-radius: 2px;
+    box-shadow: 0 10px 40px rgba(201,168,76,0.4);
+    z-index: 2;
+    font-family: 'Playfair Display', serif;
+  }
+  .about-badge .big { font-size: 2.5rem; font-weight: 900; line-height:1; }
+  .about-badge .sm { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; }
+  .about-text { }
+  .about-text p {
+    color: var(--gray);
+    line-height: 1.8;
+    margin-top: 1.5rem;
+    font-size: 1.02rem;
+  }
+  .owner-card {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+  }
+  .owner-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--sienna));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .owner-info .name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+  .owner-info .role {
+    font-size: 0.8rem;
+    color: var(--gold-dark);
+    letter-spacing: 0.08em;
+  }
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .value-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .value-icon {
+    width: 36px; height: 36px;
+    background: rgba(201,168,76,0.12);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .value-text .vt { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+  .value-text .vs { font-size: 0.8rem; color: var(--gray); margin-top: 0.15rem; }
+
+  /* ─── SERVICES ─── */
+  #services {
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .services-bg {
+    position: absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 10% 80%, rgba(139,69,19,0.1) 0%, transparent 50%);
+  }
+  .services-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+  }
+  .services-header .section-label { justify-content: center; }
+  .services-header .section-label::before { display:none; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    position: relative;
+    z-index: 1;
+  }
+  .service-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2.5rem;
+    transition: background 0.4s, border-color 0.4s, transform 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content:'';
+    position: absolute;
+    top:0; left:0; right:0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--sienna));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover {
+    background: rgba(201,168,76,0.06);
+    border-color: rgba(201,168,76,0.2);
+    transform: translateY(-4px);
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .svc-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .svc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+  }
+  .svc-desc {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+  }
+  .svc-tags {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .svc-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.25rem 0.7rem;
+  }
+
+  /* ─── PRODUCTS ─── */
+  #products {
+    background: var(--parchment);
+    position: relative;
+  }
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .product-card {
+    background: var(--white);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(26,18,8,0.06);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    position: relative;
+  }
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(26,18,8,0.12);
+  }
+  .product-img {
+    height: 200px;
+    background: linear-gradient(135deg, #d4a84b 0%, #8b4513 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-img img {
+    width:100%; height:100%;
+    object-fit: cover;
+    position: absolute; inset:0;
+  }
+  .product-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+  }
+  .product-info { padding: 1.25rem; }
+  .product-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .product-info p {
+    font-size: 0.83rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .product-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .product-moq {
+    font-size: 0.75rem;
+    color: var(--gold-dark);
+    font-weight: 600;
+  }
+  .btn-order {
+    padding: 0.5rem 1.2rem;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    text-transform: uppercase;
+  }
+  .btn-order:hover { background: var(--gold); color: var(--ink); }
+  .no-products {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--gray);
+  }
+  .no-products .big-icon { font-size: 4rem; margin-bottom: 1rem; }
+
+  /* ─── ADMIN PANEL ─── */
+  #admin-panel {
+    background: var(--white);
+    border: 2px dashed rgba(201,168,76,0.4);
+    padding: 2rem;
+    margin-bottom: 3rem;
+    display: none;
+    border-radius: 3px;
+  }
+  #admin-panel.active { display: block; }
+  #admin-panel h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .admin-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .form-group.full { grid-column: 1/-1; }
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(26,18,8,0.12);
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--gold);
+  }
+  .form-group textarea { height: 80px; resize: none; }
+  .admin-key-wrap {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .admin-key-wrap input {
+    flex:1; min-width:200px;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(26,18,8,0.12);
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .admin-key-wrap input:focus { border-color: var(--gold); }
+  .admin-key-wrap button {
+    padding: 0.7rem 1.5rem;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    letter-spacing: 0.08em;
+  }
+  .admin-key-wrap button:hover { background: var(--gold); color: var(--ink); }
+  #admin-unlock-section {
+    text-align: center;
+    padding: 2rem;
+    border: 1px dashed rgba(201,168,76,0.3);
+    background: var(--cream);
+    border-radius: 3px;
+  }
+  #admin-unlock-section p {
+    font-size: 0.88rem;
+    color: var(--gray);
+    margin-bottom: 1rem;
+  }
+
+  /* ─── ORDER SECTION ─── */
+  #order {
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .order-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .order-info h2 { margin-bottom: 1rem; }
+  .order-info p {
+    color: var(--gray);
+    line-height: 1.8;
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+  .order-steps {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .step-text .st { font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+  .step-text .ss { font-size: 0.82rem; color: var(--gray); margin-top: 0.15rem; }
+  .order-form-wrap {
+    background: var(--cream);
+    padding: 2.5rem;
+    border-top: 3px solid var(--gold);
+    box-shadow: 0 10px 40px rgba(26,18,8,0.06);
+  }
+  .order-form-wrap h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+  }
+  .order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .order-form input,
+  .order-form select,
+  .order-form textarea {
+    padding: 0.8rem 1.1rem;
+    border: 1px solid rgba(26,18,8,0.1);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+  .order-form input:focus,
+  .order-form select:focus,
+  .order-form textarea:focus { border-color: var(--gold); }
+  .order-form textarea { height: 100px; resize: none; }
+  .order-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .submit-btn {
+    padding: 1rem;
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    width: 100%;
+  }
+  .submit-btn:hover {
+    background: var(--gold-dark);
+    color: var(--white);
+    transform: translateY(-1px);
+  }
+  .success-msg {
+    display: none;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold-dark);
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-bg {
+    position: absolute; inset:0;
+    background: url('https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=1600') center/cover no-repeat;
+    opacity: 0.04;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    position: relative; z-index:1;
+  }
+  .contact-left .section-title { color: var(--white); }
+  .contact-left p {
+    color: rgba(255,255,255,0.55);
+    line-height: 1.8;
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+  .contact-items {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .contact-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .contact-icon {
+    width: 44px; height: 44px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .contact-icon:hover { background: rgba(201,168,76,0.2); }
+  .contact-detail .cd-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.25rem;
+  }
+  .contact-detail .cd-val {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .contact-right {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 2.5rem;
+  }
+  .contact-right h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    padding: 0.8rem 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .contact-form input:focus,
+  .contact-form textarea:focus { border-color: var(--gold); }
+  .contact-form textarea { height: 120px; resize: none; }
+  .contact-send {
+    padding: 0.9rem;
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+  }
+  .contact-send:hover { background: var(--gold-light); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #0d0903;
+    padding: 3rem clamp(1.5rem, 6vw, 8rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-copy {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 1rem;
+  }
+  .footer-social {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .footer-social:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ─── TOAST ─── */
+  #toast {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--ink);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    border-left: 3px solid var(--gold);
+    font-size: 0.9rem;
+    z-index: 9999;
+    transform: translateX(120%);
+    transition: transform 0.4s ease;
+    max-width: 320px;
+  }
+  #toast.show { transform: translateX(0); }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal-left.visible { opacity:1; transform: translateX(0); }
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal-right.visible { opacity:1; transform: translateX(0); }
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.88);
+    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal-scale.visible { opacity:1; transform: scale(1); }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+  .reveal-delay-6 { transition-delay: 0.6s; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(20px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity:0; }
+    to { opacity:1; }
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform: scale(1); }
+    50% { opacity:0.5; transform: scale(0.8); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes floatSlow {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-14px) rotate(1deg); }
+    66% { transform: translateY(-6px) rotate(-1deg); }
+  }
+  @keyframes goldPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
+  }
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes borderGlow {
+    0%,100% { border-color: rgba(201,168,76,0.3); }
+    50% { border-color: rgba(201,168,76,0.9); box-shadow: 0 0 18px rgba(201,168,76,0.25); }
+  }
+  @keyframes slideInLeft {
+    from { opacity:0; transform: translateX(-60px); }
+    to { opacity:1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity:0; transform: translateX(60px); }
+    to { opacity:1; transform: translateX(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity:0; transform: scale(0.85); }
+    to { opacity:1; transform: scale(1); }
+  }
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink {
+    0%,100% { border-color: transparent; }
+    50% { border-color: var(--gold); }
+  }
+  @keyframes ripple {
+    0% { transform: scale(0); opacity:1; }
+    100% { transform: scale(4); opacity:0; }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes stampIn {
+    0% { opacity:0; transform: scale(1.6) rotate(-8deg); }
+    60% { opacity:1; transform: scale(0.95) rotate(1deg); }
+    100% { opacity:1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes gradientShift {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes waveText {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes particleDrift {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity:0.7; }
+    100% { transform: translateY(-120px) translateX(30px) scale(0.3); opacity:0; }
+  }
+
+  /* ─── FLOATING PARTICLES on hero ─── */
+  .particle {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleDrift linear infinite;
+    opacity: 0;
+  }
+
+  /* ─── GOLD SHIMMER on section titles ─── */
+  .shimmer-text {
+    background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 40%, var(--gold-light) 50%, var(--gold) 60%, var(--gold-dark) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* ─── ANIMATED GOLD BORDER on cards ─── */
+  .anim-border { animation: borderGlow 2.5s ease-in-out infinite; }
+
+  /* ─── FLOATING BADGE ─── */
+  .float-badge { animation: floatSlow 5s ease-in-out infinite; }
+
+  /* ─── GOLD PULSE on CTA buttons ─── */
+  .pulse-btn { animation: goldPulse 2s ease-in-out infinite; }
+
+  /* ─── MARQUEE STRIP ─── */
+  .marquee-track {
+    overflow: hidden;
+    background: var(--gold);
+    padding: 0.65rem 0;
+  }
+  .marquee-inner {
+    display: flex;
+    width: max-content;
+    animation: marquee 22s linear infinite;
+    gap: 0;
+  }
+  .marquee-inner span {
+    white-space: nowrap;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 0 2.5rem;
+  }
+  .marquee-inner span::before {
+    content: '✦';
+    margin-right: 2.5rem;
+    opacity: 0.6;
+  }
+  .marquee-track:hover .marquee-inner { animation-play-state: paused; }
+
+  /* ─── STAMP animation for stat numbers ─── */
+  .stamp-in { animation: stampIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards; opacity:0; }
+
+  /* ─── WAVE letters for hero tagline ─── */
+  .wave-letter {
+    display: inline-block;
+    animation: waveText 1.4s ease-in-out infinite;
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 900px) {
+    .about-grid, .order-grid, .contact-grid { grid-template-columns: 1fr; }
+    .about-img-wrap { height: 320px; display:none; }
+    .hero-stats { position: static; margin-top: 3rem; justify-content: flex-start; }
+    .nav-links { display:none; }
+    .hamburger { display:flex; }
+    .admin-form { grid-template-columns: 1fr; }
+    .admin-form .full { grid-column: 1; }
+    .order-form .row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .hero-stats { gap:1.5rem; flex-wrap: wrap; }
+    .products-header { flex-direction: column; align-items: flex-start; }
+    footer { flex-direction: column; text-align: center; }
+  }
+
+  /* ─── MOBILE MENU ─── */
+  #mobile-menu {
+    position: fixed;
+    top:72px; left:0; right:0;
+    background: rgba(26,18,8,0.98);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    transform: translateY(-110%);
+    transition: transform 0.4s ease;
+    z-index: 799;
+  }
+  #mobile-menu.open { transform: translateY(0); }
+  #mobile-menu a {
+    display: block;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    padding: 0.85rem 0;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: color 0.3s;
+  }
+  #mobile-menu a:hover { color: var(--gold-light); }
+
+  /* selected product for order */
+  #selected-product-display {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold);
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--gold-dark);
+    font-weight: 600;
+    display: none;
+  }
+
+  /* ─── MOQ WARNING ─── */
+  .moq-warning {
+    display: none;
+    background: #fff8e1;
+    border-left: 3px solid #f0a500;
+    padding: 0.75rem 1rem;
+    font-size: 0.83rem;
+    color: #7a5500;
+    font-weight: 500;
+    border-radius: 0 2px 2px 0;
+    animation: fadeUp 0.3s ease;
+  }
+  .moq-warning.show { display: flex; align-items: center; gap: 0.5rem; }
+
+  /* ─── PAYMENT SECTION ─── */
+  #payment {
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .payment-header { text-align: center; margin-bottom: 3rem; }
+  .payment-header .section-label { justify-content: center; }
+  .payment-header .section-label::before { display:none; }
+
+  .payment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .payment-card {
+    background: var(--white);
+    border: 1px solid rgba(26,18,8,0.07);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-radius: 3px;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .payment-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--sienna));
+    transform: scaleX(0);
+    transition: transform 0.35s ease;
+  }
+  .payment-card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(26,18,8,0.1); border-color: rgba(201,168,76,0.3); }
+  .payment-card:hover::after { transform: scaleX(1); }
+  .payment-icon { font-size: 2.8rem; margin-bottom: 1rem; display: block; }
+  .payment-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); margin-bottom: 0.5rem; }
+  .payment-desc { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+  .payment-detail {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin-top: 0.75rem;
+    background: rgba(201,168,76,0.1);
+    padding: 0.4rem 0.8rem;
+    display: inline-block;
+    letter-spacing: 0.05em;
+  }
+
+  /* UPI QR modal */
+  .qr-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .qr-modal.open { display: flex; }
+  .qr-box {
+    background: var(--white);
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 340px;
+    width: 90%;
+    position: relative;
+    border-top: 4px solid var(--gold);
+    animation: fadeUp 0.35s ease;
+  }
+  .qr-box h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--ink); }
+  .qr-box p { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.5rem; }
+ <img src="gpay.png"style="width:180px;height:180px;">
+  .qr-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none; font-size: 1.4rem;
+    cursor: pointer; color: var(--gray); line-height: 1;
+    transition: color 0.2s;
+  }
+  .qr-close:hover { color: var(--ink); }
+
+  /* ─── DELIVERY INFO BANNER ─── */
+  .delivery-banner {
+    background: var(--ink);
+    border-radius: 3px;
+    padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .delivery-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .delivery-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .delivery-text .dt { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+  .delivery-text .dv { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5; }
+
+  /* MOQ table */
+  .moq-table-wrap {
+    margin-top: 3rem;
+    overflow-x: auto;
+  }
+  .moq-table-wrap h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  table.moq-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .moq-table th {
+    background: var(--ink);
+    color: var(--gold-light);
+    text-align: left;
+    padding: 0.85rem 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+  .moq-table td {
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid rgba(26,18,8,0.07);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .moq-table tr:nth-child(even) td { background: rgba(201,168,76,0.04); }
+  .moq-table tr:hover td { background: rgba(201,168,76,0.08); }
+  .moq-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold-dark);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  @media (max-width: 600px) {
+    .delivery-banner { padding: 1.5rem; }
+    .payment-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════════
+     GREETING OVERLAY
+════════════════════════════════════════ -->
+<div id="greeting">
+  <div class="greeting-bg"></div>
+  <div class="greeting-lines"></div>
+  <div class="greeting-content">
+    <div class="greeting-badge">Est. 1994 · Vasai (w), Maharashtra</div>
+    <div class="greeting-logo"><span>AR</span> Enterprise</div>
+    <div class="greeting-tagline">Crafting Excellence in Every Fold & Print</div>
+    <div class="greeting-divider"></div>
+    <div class="greeting-exp">
+      <strong>30+</strong>
+      Years of Trusted Manufacturing Experience
+    </div>
+    <button class="greeting-enter" onclick="dismissGreeting()">Enter Website →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════ -->
+<nav id="navbar">
+  <a class="nav-logo" href="#home"><span>AR</span> Enterprise</a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#payment">Payment</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#order" class="nav-order-btn">Place Order</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark mode" aria-label="Toggle theme">
+      <div class="toggle-knob"></div>
+      <span class="toggle-icon-sun">☀️</span>
+      <span class="toggle-icon-moon">🌙</span>
+    </button>
+    <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu">
+  <a href="#home" onclick="toggleMenu()">Home</a>
+  <a href="#about" onclick="toggleMenu()">About Us</a>
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#products" onclick="toggleMenu()">Products</a>
+  <a href="#payment" onclick="toggleMenu()">Payment & Delivery</a>
+  <a href="#order" onclick="toggleMenu()">Place Order</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- ═══ MARQUEE STRIP ═══ -->
+<div class="marquee-track">
+  <div class="marquee-inner">
+    <span>Custom Envelopes</span><span>Paper Bags</span><span>Business Cards</span><span>Brochures</span><span>Letterheads</span><span>Bill Books</span><span>Gift Packaging</span><span>Bulk Printing</span><span>Fast Delivery</span><span>30+ Years Experience</span>
+    <span>Custom Envelopes</span><span>Paper Bags</span><span>Business Cards</span><span>Brochures</span><span>Letterheads</span><span>Bill Books</span><span>Gift Packaging</span><span>Bulk Printing</span><span>Fast Delivery</span><span>30+ Years Experience</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div id="hero-particles"></div>
+  <div class="hero-content">
+    <div class="hero-chip">Mumbai's Premier Printing & Packaging House</div>
+    <h1 class="hero-h1">
+      Where Quality
+      <span class="accent">Meets Craftsmanship</span>
+    </h1>
+    <p class="hero-sub">
+      Specialists in custom envelope manufacturing, paper bag production, and all-format printing works. Trusted by businesses across Maharashtra for three decades.
+    </p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary pulse-btn">Explore Products</a>
+      <a href="#order" class="btn-outline">Place an Order</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">30+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5K+</div>
+      <div class="stat-label">Happy Clients</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Product Types</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Quality Assured</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ABOUT
+════════════════════════════════════════ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-img-wrap reveal-left">
+      <div class="about-img-main"></div>
+      <div class="about-img-accent"></div>
+      <div class="about-badge float-badge">
+        <div class="big">30+</div>
+        <div class="sm">Years of<br>Excellence</div>
+      </div>
+    </div>
+    <div class="about-text reveal-right">
+      <div class="section-label reveal">Our Story</div>
+      <h2 class="section-title shimmer-text reveal reveal-delay-1">Irfan Ansari's Vision <br>of Quality Printing</h2>
+      <p class="reveal reveal-delay-2">
+        Founded by <strong>Mr. Irfan Ansari</strong>, AR Enterprise has been a cornerstone of the printing and packaging industry in Maharashtra since 1994. What began as a modest printing operation has grown into a full-scale manufacturing powerhouse — delivering premium envelopes, paper bags, and custom print solutions to thousands of satisfied businesses.
+      </p>
+      <p class="reveal reveal-delay-3">
+        Our state-of-the-art facility combines traditional craftsmanship with modern machinery, ensuring every product that leaves our floor meets the highest standards of quality, consistency, and on-time delivery.
+      </p>
+      <div class="owner-card reveal reveal-delay-3">
+        <div class="owner-avatar">IA</div>
+        <div class="owner-info">
+          <div class="name">Irfan Ansari</div>
+          <div class="role">Founder & Managing Director · AR Enterprise</div>
+        </div>
+      </div>
+      <div class="values-grid reveal reveal-delay-4">
+        <div class="value-item">
+          <div class="value-icon">🏭</div>
+          <div class="value-text">
+            <div class="vt">In-house Production</div>
+            <div class="vs">Full control from design to delivery</div>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">✅</div>
+          <div class="value-text">
+            <div class="vt">Quality Certified</div>
+            <div class="vs">Every batch inspected rigorously</div>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🚚</div>
+          <div class="value-text">
+            <div class="vt">Pan-India Delivery</div>
+            <div class="vs">Timely dispatch, every order</div>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🌿</div>
+          <div class="value-text">
+            <div class="vt">Eco-friendly Options</div>
+            <div class="vs">Sustainable paper & inks available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SERVICES
+════════════════════════════════════════ -->
+<section id="services">
+  <div class="services-bg"></div>
+  <div class="services-header">
+    <div class="section-label reveal" style="color:var(--gold-light)">What We Do</div>
+    <h2 class="section-title light shimmer-text reveal reveal-delay-1">Our Core Services</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="svc-icon">✉️</span>
+      <div class="svc-title">Envelope Manufacturing</div>
+      <p class="svc-desc">Custom envelopes in all sizes and styles — from standard office envelopes to premium window envelopes, security envelopes, and kraft envelopes for bulk requirements.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">A4 / A5 / DL</span>
+        <span class="svc-tag">Window Envelopes</span>
+        <span class="svc-tag">Security Print</span>
+        <span class="svc-tag">Bulk Orders</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <span class="svc-icon">🛍️</span>
+      <div class="svc-title">Paper Bag Manufacturing</div>
+      <p class="svc-desc">High-quality paper bags for retail, gifting, food packaging, and corporate branding. Available in kraft, art paper, and eco-friendly recycled materials.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Kraft Paper</span>
+        <span class="svc-tag">Art Paper</span>
+        <span class="svc-tag">Handle Bags</span>
+        <span class="svc-tag">Food Grade</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <span class="svc-icon">🖨️</span>
+      <div class="svc-title">Offset Printing</div>
+      <p class="svc-desc">Commercial offset printing for brochures, catalogues, letterheads, visiting cards, and all stationery items with vibrant CMYK and Pantone color accuracy.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">CMYK</span>
+        <span class="svc-tag">Pantone</span>
+        <span class="svc-tag">Brochures</span>
+        <span class="svc-tag">Catalogues</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <span class="svc-icon">📋</span>
+      <div class="svc-title">Stationery & Business Print</div>
+      <p class="svc-desc">Complete business stationery solutions including letterheads, notepads, bill books, visiting cards, and custom branded office supplies.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Letterheads</span>
+        <span class="svc-tag">Bill Books</span>
+        <span class="svc-tag">Notepads</span>
+        <span class="svc-tag">ID Cards</span>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <span class="svc-icon">🎁</span>
+      <div class="svc-title">Gift & Specialty Packaging</div>
+      <p class="svc-desc">Luxurious gift boxes, premium laminated bags, ribbon-handle bags, and bespoke packaging for weddings, festivals, and corporate gifting occasions.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Gift Boxes</span>
+        <span class="svc-tag">Laminated</span>
+        <span class="svc-tag">Festive</span>
+        <span class="svc-tag">Corporate</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <span class="svc-icon">🎨</span>
+      <div class="svc-title">Design & Customization</div>
+      <p class="svc-desc">End-to-end design services — from concept to print-ready artwork. Our in-house designers craft logos, layouts, and brand identities tailored to your vision.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Logo Design</span>
+        <span class="svc-tag">Brand Identity</span>
+        <span class="svc-tag">Artwork</span>
+        <span class="svc-tag">Proofing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PRODUCTS
+════════════════════════════════════════ -->
+<section id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-label reveal">Our Catalogue</div>
+      <h2 class="section-title shimmer-text reveal reveal-delay-1">Featured Products</h2>
+    </div>
+    <button class="btn-outline" style="color:var(--ink); border-color:rgba(26,18,8,0.3);" onclick="scrollToOrder()">Order Any Product →</button>
+  </div>
+
+  <!-- ADMIN UNLOCK -->
+  <div id="admin-section">
+    <div id="admin-unlock-section">
+      <p>🔒 Admin access — manage product catalogue</p>
+      <div class="admin-key-wrap" style="justify-content:center;">
+        <input type="password" id="admin-key-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter') checkAdminKey()">
+        <button onclick="checkAdminKey()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN ADD PRODUCT PANEL -->
+  <div id="admin-panel">
+    <h3>⚙️ Admin Panel — Add / Manage Products</h3>
+    <div class="admin-form">
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input type="text" id="p-name" placeholder="e.g. A4 Kraft Envelope">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="p-cat">
+          <option>Envelopes</option>
+          <option>Paper Bags</option>
+          <option>Printing</option>
+          <option>Stationery</option>
+          <option>Gift Packaging</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Description *</label>
+        <textarea id="p-desc" placeholder="Describe the product specifications..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Minimum Order Qty</label>
+        <input type="text" id="p-moq" placeholder="e.g. 500 pcs">
+      </div>
+      <div class="form-group">
+        <label>Badge Label (optional)</label>
+        <input type="text" id="p-badge" placeholder="e.g. Best Seller">
+      </div>
+      <div class="form-group">
+        <label>Emoji Icon</label>
+        <input type="text" id="p-icon" placeholder="e.g. ✉️" value="📦">
+      </div>
+      <div class="form-group">
+        <label>Image URL (optional)</label>
+        <input type="text" id="p-img" placeholder="https://...">
+      </div>
+      <div class="form-group full" style="flex-direction:row; gap:1rem; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="addProduct()" style="padding:0.75rem 2rem; font-size:0.85rem;">Add Product</button>
+        <button class="btn-outline" onclick="clearAdminForm()" style="padding:0.75rem 2rem; font-size:0.85rem; color:var(--ink); border-color:rgba(26,18,8,0.3);">Clear Form</button>
+        <button onclick="lockAdmin()" style="padding:0.75rem 1.5rem; background:transparent; border:1px solid rgba(200,0,0,0.3); color:#c00; font-size:0.82rem; cursor:pointer; margin-left:auto;">🔒 Lock Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS GRID -->
+  <div class="products-grid" id="products-grid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAYMENT & DELIVERY
+════════════════════════════════════════ -->
+<section id="payment">
+  <div class="payment-header">
+    <div class="section-label reveal" style="justify-content:center;">Payment & Delivery</div>
+    <h2 class="section-title shimmer-text reveal reveal-delay-1">Easy Payments, <br>Reliable Delivery</h2>
+  </div>
+
+  <!-- Payment Methods -->
+  <div class="payment-grid">
+    <div class="payment-card reveal-scale anim-border" onclick="openQR()">
+      <span class="payment-icon">📱</span>
+      <div class="payment-title">UPI Payment</div>
+      <p class="payment-desc">Pay instantly via any UPI app — GPay, PhonePe, Paytm, BHIM. Scan the QR code for quick transfer.</p>
+      <div class="payment-detail">Tap to view QR Code →</div>
+    </div>
+    <div class="payment-card reveal-scale anim-border reveal-delay-1">
+      <span class="payment-icon">🏦</span>
+      <div class="payment-title">Bank Transfer (NEFT/RTGS)</div>
+      <p class="payment-desc">Transfer directly to our bank account. Account details shared after order confirmation.</p>
+      <div class="payment-detail">Details on Invoice</div>
+    </div>
+    <div class="payment-card reveal-scale anim-border reveal-delay-2">
+      <span class="payment-icon">💵</span>
+      <div class="payment-title">Cash on Delivery</div>
+      <p class="payment-desc">Pay cash when your order arrives. Available for local Vasai (w) / Mumbai deliveries only.</p>
+      <div class="payment-detail">Local Orders Only</div>
+    </div>
+    <div class="payment-card reveal-scale anim-border reveal-delay-3">
+      <span class="payment-icon">💳</span>
+      <div class="payment-title">Card / Net Banking</div>
+      <p class="payment-desc">Credit card, debit card, and net banking payments accepted via secure payment link sent on request.</p>
+      <div class="payment-detail">Payment Link on Request</div>
+    </div>
+  </div>
+
+  <!-- Delivery Banner -->
+  <div class="delivery-banner reveal">
+    <div class="delivery-item">
+      <div class="delivery-icon">🚚</div>
+      <div class="delivery-text">
+        <div class="dt">Delivery Charges</div>
+        <div class="dv">Charged at actuals based on courier partner rates. Exact amount quoted before dispatch.</div>
+      </div>
+    </div>
+    <div class="delivery-item">
+      <div class="delivery-icon">📦</div>
+      <div class="delivery-text">
+        <div class="dt">Packaging</div>
+        <div class="dv">All orders packed securely. Bulk orders shrink-wrapped and boxed for safe transit.</div>
+      </div>
+    </div>
+    <div class="delivery-item">
+      <div class="delivery-icon">🗓️</div>
+      <div class="delivery-text">
+        <div class="dt">Lead Time</div>
+        <div class="dv">Standard: 5–7 working days. Urgent orders: 2–3 days (extra charges apply).</div>
+      </div>
+    </div>
+    <div class="delivery-item">
+      <div class="delivery-icon">🌍</div>
+      <div class="delivery-text">
+        <div class="dt">Delivery Area</div>
+        <div class="dv">Pan-India via trusted courier. Local Vasai (w)e/Mumbai hand-delivery available.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOQ Table -->
+  <div class="moq-table-wrap reveal">
+    <h3>📋 Minimum Order Quantities (MOQ)</h3>
+    <table class="moq-table">
+      <thead>
+        <tr>
+          <th>Product Category</th>
+          <th>Minimum Qty</th>
+          <th>Unit</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>✉️ Standard Envelopes (A4 / A5 / DL)</td>
+          <td><span class="moq-badge">500 pcs</span></td>
+          <td>Per size per colour</td>
+          <td>Plain or single-colour print</td>
+        </tr>
+        <tr>
+          <td>📬 Window / Security Envelopes</td>
+          <td><span class="moq-badge">250 pcs</span></td>
+          <td>Per size</td>
+          <td>Custom print available</td>
+        </tr>
+        <tr>
+          <td>🛍️ Kraft Paper Bags</td>
+          <td><span class="moq-badge">200 pcs</span></td>
+          <td>Per size per design</td>
+          <td>Handle style can vary</td>
+        </tr>
+        <tr>
+          <td>🎁 Art Paper / Gift Bags</td>
+          <td><span class="moq-badge">100 pcs</span></td>
+          <td>Per size per design</td>
+          <td>Lamination extra</td>
+        </tr>
+        <tr>
+          <td>💼 Visiting / Business Cards</td>
+          <td><span class="moq-badge">100 pcs</span></td>
+          <td>Per design</td>
+          <td>Both sides print included</td>
+        </tr>
+        <tr>
+          <td>📄 Letterheads</td>
+          <td><span class="moq-badge">500 pcs</span></td>
+          <td>Per design</td>
+          <td>90 GSM standard</td>
+        </tr>
+        <tr>
+          <td>📋 Brochures / Leaflets</td>
+          <td><span class="moq-badge">250 pcs</span></td>
+          <td>Per design</td>
+          <td>A4 / A5 / tri-fold</td>
+        </tr>
+        <tr>
+          <td>📓 Bill Books / Notepads</td>
+          <td><span class="moq-badge">50 books</span></td>
+          <td>Per design</td>
+          <td>Carbon copy available</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.78rem; color:var(--gray); margin-top:0.75rem;">⚠️ Orders below MOQ may be accepted with a small setup surcharge. Contact us to discuss.</p>
+  </div>
+</section>
+
+<!-- UPI QR Modal -->
+<div class="qr-modal" id="qr-modal" onclick="if(event.target===this) closeQR()">
+  <div class="qr-box">
+    <button class="qr-close" onclick="closeQR()">✕</button>
+    <h3>Scan to Pay via UPI</h3>
+    <p>Open any UPI app and scan, or use the UPI ID below</p>
+
+    <!-- QR capture area -->
+    <div id="qr-capture-area" style="background:#fff; padding:1rem; border-radius:8px; display:inline-block;">
+      <div id="qr-code-container" style="display:flex; justify-content:center; margin-bottom:0.5rem;"></div>
+      <div style="font-size:0.78rem; color:#3d2b1f; font-weight:600; letter-spacing:0.03em;">arenterprise9876-2@okaxis</div>
+      <div style="font-size:0.7rem; color:#8b6914; margin-top:2px;">AR Enterprise · UPI Payment</div>
+    </div>
+
+    <!-- Copy UPI button -->
+    <div style="margin:0.9rem 0 0.4rem;">
+      <button onclick="copyUPI()" style="
+        background:none; border:1px solid var(--gold); color:var(--gold-dark);
+        padding:0.4rem 1.2rem; font-size:0.78rem; letter-spacing:0.08em;
+        cursor:pointer; border-radius:2px; transition:background 0.2s;
+      " onmouseover="this.style.background='#fdf3d8'" onmouseout="this.style.background='none'">
+        📋 Copy UPI ID
+      </button>
+    </div>
+
+    <!-- Share Screenshot on WhatsApp button -->
+    <button id="share-wa-btn" onclick="shareScreenshotOnWhatsApp()" style="
+      width:100%; margin-top:0.6rem;
+      background: #25D366; border:none; color:#fff;
+      padding:0.75rem 1rem; font-size:0.88rem; font-weight:600;
+      letter-spacing:0.05em; cursor:pointer; border-radius:4px;
+      display:flex; align-items:center; justify-content:center; gap:0.5rem;
+      transition:background 0.2s;
+    " onmouseover="this.style.background='#1ebe5d'" onmouseout="this.style.background='#25D366'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.561 4.14 1.535 5.874L.057 23.886a.5.5 0 0 0 .611.61l6.044-1.465A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.793 9.793 0 0 1-4.994-1.368l-.357-.213-3.706.899.93-3.624-.233-.372A9.761 9.761 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
+      </svg>
+      Share Screenshot on WhatsApp
+    </button>
+
+    <p style="font-size:0.7rem; color:var(--gray); margin-top:0.6rem; line-height:1.5;">
+      After paying, tap the button above to open WhatsApp and send your payment screenshot.
+    </p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function() {
+  var qrGenerated = false;
+
+  function generateQR() {
+    if (qrGenerated) return;
+    var container = document.getElementById('qr-code-container');
+    if (!container) return;
+    container.innerHTML = '';
+    new QRCode(container, {
+      text: 'upi://pay?pa=arenterprise9876-2@okaxis&pn=AR%20Enterprise&cu=INR',
+      width: 180,
+      height: 180,
+      colorDark: '#1a1208',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    qrGenerated = true;
+  }
+
+  var _origOpenQR = window.openQR;
+  window.openQR = function() {
+    if (_origOpenQR) _origOpenQR();
+    else document.getElementById('qr-modal').classList.add('open');
+    setTimeout(generateQR, 50);
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(generateQR, 300);
+  });
+
+  // Copy UPI ID
+  window.copyUPI = function() {
+    var upi = 'arenterprise9876-2@okaxis';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(upi).then(function() {
+        showToast('✅ UPI ID copied to clipboard!');
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = upi;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('✅ UPI ID copied!');
+    }
+  };
+
+  // Share Screenshot on WhatsApp — opens your number so client can send their payment screenshot
+  window.shareScreenshotOnWhatsApp = function() {
+    var waText = encodeURIComponent(
+      '💰 *Payment Done – AR Enterprise*\n\n' +
+      'Hi, I have completed the UPI payment.\n' +
+      'Please find my payment screenshot attached below.\n\n' +
+      '📌 Paid to: arenterprise9876-2@okaxis\n' +
+      'Kindly confirm and process my order. 🙏'
+    );
+    window.open('https://wa.me/919158840776?text=' + waText, '_blank');
+  };
+})();
+</script>
+
+<!-- ═══════════════════════════════════════
+     ORDER
+════════════════════════════════════════ -->
+<section id="order">
+  <div class="order-grid">
+    <div class="order-info">
+      <div class="section-label reveal">Place Your Order</div>
+      <h2 class="section-title shimmer-text reveal reveal-delay-1">Ready to Order? <br>Let's Get Started</h2>
+      <p class="reveal reveal-delay-2">
+        Fill in the form and our team will get back to you with a detailed quotation within 24 hours. We handle orders of all sizes — from small business runs to large-scale bulk manufacturing.
+      </p>
+      <div class="order-steps reveal reveal-delay-3">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <div class="st">Submit Your Requirements</div>
+            <div class="ss">Fill the order form with product details and quantity</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <div class="st">Receive Your Quote</div>
+            <div class="ss">We'll send you pricing and lead time within 24 hours</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <div class="st">Confirm & We Produce</div>
+            <div class="ss">Approve design proofs and we begin production</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <div class="st">Delivery to Your Door</div>
+            <div class="ss">Packaged carefully and delivered on schedule</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="order-form-wrap reveal reveal-delay-2">
+      <h3>📋 Order Enquiry Form</h3>
+      <div id="selected-product-display" id="spd">📦 Selected: <span id="spd-name"></span> &nbsp;<button onclick="clearSelectedProduct()" style="background:none; border:none; cursor:pointer; color:#c00; font-size:0.85rem;">✕ Clear</button></div>
+      <div class="order-form">
+        <input type="hidden" id="order-product">
+        <input type="text" id="o-name" placeholder="Your Full Name *" required>
+        <input type="text" id="o-business" placeholder="Business / Company Name">
+        <div class="row">
+          <input type="tel" id="o-phone" placeholder="Phone / WhatsApp *" required>
+          <input type="email" id="o-email" placeholder="Email Address">
+        </div>
+        <select id="o-product" onchange="checkMOQ()">
+          <option value="">-- Select Product Category --</option>
+          <option value="Envelopes" data-moq="500">Envelopes</option>
+          <option value="Paper Bags" data-moq="100">Paper Bags</option>
+          <option value="Brochures / Leaflets" data-moq="250">Brochures / Leaflets</option>
+          <option value="Business Cards" data-moq="100">Business Cards</option>
+          <option value="Letterheads" data-moq="500">Letterheads</option>
+          <option value="Bill Books / Notepads" data-moq="50">Bill Books / Notepads</option>
+          <option value="Gift Packaging" data-moq="100">Gift Packaging</option>
+          <option value="Custom / Other" data-moq="0">Custom / Other</option>
+        </select>
+        <div class="row">
+          <input type="number" id="o-qty" placeholder="Quantity Required *" min="1" oninput="checkMOQ()">
+          <input type="text" id="o-size" placeholder="Size / Dimensions">
+        </div>
+        <!-- MOQ Warning -->
+        <div class="moq-warning" id="moq-warning">
+          <span>⚠️</span>
+          <span id="moq-warning-text">Quantity is below minimum order. A setup surcharge may apply.</span>
+        </div>
+        <input type="text" id="o-city" placeholder="Your City / Delivery Location *">
+        <select id="o-payment">
+          <option value="">-- Preferred Payment Method --</option>
+          <option>UPI (GPay / PhonePe / Paytm)</option>
+          <option>Bank Transfer (NEFT / RTGS)</option>
+          <option>Cash on Delivery (Local only)</option>
+          <option>Card / Net Banking (Link)</option>
+        </select>
+        <textarea id="o-notes" placeholder="Additional specifications, artwork notes, deadline..."></textarea>
+        <div style="background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.25); padding:0.75rem 1rem; font-size:0.8rem; color:var(--gray); line-height:1.6;">
+          🚚 <strong>Delivery Note:</strong> Courier charges are billed at actuals and will be confirmed before dispatch. Local Vasai(w)/Mumbai orders may qualify for hand-delivery.
+        </div>
+        <button class="submit-btn" onclick="submitOrder()">Submit Enquiry →</button>
+        <div class="success-msg" id="order-success">
+          ✅ Thank you! We've received your enquiry. Our team will contact you within 24 hours.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CONTACT
+════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-grid">
+    <div class="contact-left">
+      <div class="section-label reveal" style="color:var(--gold-light)">Get In Touch</div>
+      <h2 class="section-title shimmer-text reveal reveal-delay-1">Contact <br>AR Enterprise</h2>
+      <p class="reveal reveal-delay-2">
+        Have questions or need a custom quote? Reach out to us directly. Mr. Irfan Ansari and the AR Enterprise team are always happy to assist with your printing and packaging needs.
+      </p>
+      <div class="contact-items">
+        <div class="contact-item reveal reveal-delay-2">
+          <div class="contact-icon">📍</div>
+          <div class="contact-detail">
+            <div class="cd-label">Address</div>
+            <div class="cd-val">AR Enterprise, Laxmi Tower opposite Dhuri tower Anand Nagar Vasai(w)<br>Maharashtra, India</div>
+          </div>
+        </div>
+        <div class="contact-item reveal reveal-delay-3">
+          <div class="contact-icon">📞</div>
+          <div class="contact-detail">
+            <div class="cd-label">Phone / WhatsApp</div>
+            <div class="cd-val">+91 9158840776</div>
+          </div>
+        </div>
+        <div class="contact-item reveal reveal-delay-3">
+          <div class="contact-icon">📧</div>
+          <div class="contact-detail">
+            <div class="cd-label">Email</div>
+            <div class="cd-val">arenterprise9876@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-item reveal reveal-delay-4">
+          <div class="contact-icon">⏰</div>
+          <div class="contact-detail">
+            <div class="cd-label">Working Hours</div>
+            <div class="cd-val">Mon – Sat: 9:00 AM – 7:00 PM<br>Sunday: Closed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-right reveal reveal-delay-2">
+      <h3>Send Us a Message</h3>
+      <div class="contact-form">
+        <input type="text" id="c-name" placeholder="Your Name">
+        <input type="tel" id="c-phone" placeholder="Phone Number">
+        <input type="text" id="c-subject" placeholder="Subject">
+        <textarea id="c-msg" placeholder="Your message..."></textarea>
+        <button class="contact-send" onclick="sendContact()">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo"><span>AR</span> Enterprise</div>
+  <div class="footer-copy">
+    © 2024 AR Enterprise · Founded by Irfan Ansari<br>
+    All printing & packaging rights reserved.
+  </div>
+  <div class="footer-socials">
+    <a class="footer-social" href="#" title="WhatsApp">💬</a>
+    <a class="footer-social" href="#" title="Instagram">📸</a>
+    <a class="footer-social" href="#" title="Facebook">📘</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+// ─── GREETING ───
+function dismissGreeting() {
+  document.getElementById('greeting').classList.add('hide');
+  setTimeout(() => document.getElementById('greeting').style.display = 'none', 900);
+}
+
+// ─── THEME TOGGLE ───
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('ar_theme', isDark ? 'dark' : 'light');
+}
+// Apply saved theme immediately
+(function() {
+  const saved = localStorage.getItem('ar_theme');
+  if (saved === 'dark') document.documentElement.classList.add('dark');
+})();
+
+// ─── NAVBAR SCROLL ───
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ─── MOBILE MENU ───
+let menuOpen = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
+}
+
+// ─── SCROLL REVEAL ───
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+
+// ─── FLOATING PARTICLES ───
+(function spawnParticles() {
+  const container = document.getElementById('hero-particles');
+  if (!container) return;
+  container.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden;';
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${60 + Math.random()*40}%;
+      animation-duration:${4 + Math.random()*6}s;
+      animation-delay:${Math.random()*5}s;
+      opacity:${0.3 + Math.random()*0.5};
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ─── RIPPLE EFFECT on buttons ───
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.btn-primary, .btn-outline, .submit-btn, .contact-send, .greeting-enter');
+  if (!btn) return;
+  const r = document.createElement('span');
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `
+    position:absolute; border-radius:50%; background:rgba(255,255,255,0.35);
+    width:${size}px; height:${size}px;
+    left:${e.clientX - rect.left - size/2}px;
+    top:${e.clientY - rect.top - size/2}px;
+    pointer-events:none; animation:ripple 0.55s ease-out forwards;
+  `;
+  btn.style.position = 'relative';
+  btn.style.overflow = 'hidden';
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+});
+
+// ─── TILT effect on product/payment cards ───
+document.querySelectorAll('.product-card, .payment-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+    card.style.transform = `translateY(-6px) rotateX(${y}deg) rotateY(${x}deg)`;
+    card.style.transition = 'transform 0.1s';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform 0.4s ease';
+  });
+});
+
+// ─── TOAST ───
+function showToast(msg, duration=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ─── PRODUCTS DATA (localStorage backend) ───
+const STORAGE_KEY = 'ar_enterprise_products';
+
+function getProducts() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e) { return []; }
+}
+function saveProducts(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+// Default sample products
+function initDefaultProducts() {
+  if (getProducts().length === 0) {
+    const defaults = [
+      { id:1, name:'A4 White Envelope', cat:'Envelopes', desc:'Standard A4 white envelopes, ideal for official correspondence and office use. Available plain or custom printed.', moq:'500 pcs', badge:'Best Seller', icon:'✉️', img:'' },
+      { id:2, name:'Kraft Window Envelope', cat:'Envelopes', desc:'Self-seal kraft window envelopes with transparent address window. Popular for billing and courier use.', moq:'250 pcs', badge:'', icon:'📬', img:'' },
+      { id:3, name:'Kraft Paper Shopping Bag', cat:'Paper Bags', desc:'Heavy-duty kraft paper shopping bags with twisted handles. Available in all sizes, perfect for retail stores.', moq:'200 pcs', badge:'Popular', icon:'🛍️', img:'' },
+      { id:4, name:'Art Paper Gift Bag', cat:'Paper Bags', desc:'Premium glossy art paper bags for gifts and boutiques. Custom printing with vibrant colors and lamination.', moq:'100 pcs', badge:'', icon:'🎁', img:'' },
+      { id:5, name:'Visiting Cards', cat:'Printing', desc:'Premium business visiting cards with matte/gloss lamination. UV coating and embossing options available.', moq:'100 pcs', badge:'', icon:'💼', img:'' },
+      { id:6, name:'Company Letterhead', cat:'Stationery', desc:'Branded company letterheads on 90 GSM paper. Full-color header/footer with company branding.', moq:'500 pcs', badge:'', icon:'📄', img:'' },
+    ];
+    saveProducts(defaults);
+  }
+}
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  const products = getProducts();
+  if (!products.length) {
+    grid.innerHTML = '<div class="no-products"><div class="big-icon">📦</div><p>No products added yet. Admin can add products using the panel above.</p></div>';
+    return;
+  }
+  grid.innerHTML = products.map((p, i) => `
+    <div class="product-card reveal reveal-delay-${i%4}" data-id="${p.id}">
+      <div class="product-img">
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">` : ''}
+        <span style="position:relative;z-index:1;font-size:3.5rem;">${p.icon || '📦'}</span>
+        ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
+      </div>
+      <div class="product-info">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="product-actions">
+          <span class="product-moq">MOQ: ${p.moq || '—'}</span>
+          <button class="btn-order" onclick="orderProduct(${p.id})">Order Now</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  // re-observe new cards
+  grid.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+}
+
+function orderProduct(id) {
+  const p = getProducts().find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('order-product').value = p.id;
+  document.getElementById('spd-name').textContent = p.name;
+  document.getElementById('selected-product-display').style.display = 'block';
+  document.getElementById('o-product').value = p.cat;
+  document.getElementById('order').scrollIntoView({ behavior:'smooth' });
+  showToast(`📦 "${p.name}" selected for ordering`);
+}
+
+function clearSelectedProduct() {
+  document.getElementById('order-product').value = '';
+  document.getElementById('selected-product-display').style.display = 'none';
+}
+
+function scrollToOrder() {
+  document.getElementById('order').scrollIntoView({ behavior:'smooth' });
+}
+
+// ─── ADMIN ───
+const ADMIN_PASSWORD = 'arenterp2024'; // Change this password
+
+function checkAdminKey() {
+  const val = document.getElementById('admin-key-input').value;
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('admin-unlock-section').style.display = 'none';
+    document.getElementById('admin-panel').classList.add('active');
+    showToast('🔓 Admin panel unlocked!');
+  } else {
+    showToast('❌ Incorrect password. Please try again.');
+    document.getElementById('admin-key-input').value = '';
+    document.getElementById('admin-key-input').style.borderColor = '#c00';
+    setTimeout(() => document.getElementById('admin-key-input').style.borderColor = '', 1500);
+  }
+}
+
+function lockAdmin() {
+  document.getElementById('admin-panel').classList.remove('active');
+  document.getElementById('admin-unlock-section').style.display = 'block';
+  document.getElementById('admin-key-input').value = '';
+  showToast('🔒 Admin panel locked');
+}
+
+function addProduct() {
+  const name = document.getElementById('p-name').value.trim();
+  const desc = document.getElementById('p-desc').value.trim();
+  if (!name || !desc) { showToast('⚠️ Product name and description are required.'); return; }
+  const products = getProducts();
+  const newProduct = {
+    id: Date.now(),
+    name,
+    cat: document.getElementById('p-cat').value,
+    desc,
+    moq: document.getElementById('p-moq').value.trim() || '100 pcs',
+    badge: document.getElementById('p-badge').value.trim(),
+    icon: document.getElementById('p-icon').value.trim() || '📦',
+    img: document.getElementById('p-img').value.trim(),
+  };
+  products.push(newProduct);
+  saveProducts(products);
+  renderProducts();
+  clearAdminForm();
+  showToast(`✅ "${name}" added to catalogue!`);
+}
+
+function clearAdminForm() {
+  ['p-name','p-desc','p-moq','p-badge','p-img'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('p-icon').value = '📦';
+}
+
+// ════════════════════════════════════════
+//  ⚙️  YOUR DETAILS — EDIT THESE
+// ════════════════════════════════════════
+const CONFIG = {
+  // WhatsApp Number
+  whatsappNumber: '919158840776',
+
+  // Your UPI ID
+  upiId: 'arenterprise9876-2@okaxis',
+
+  // EmailJS (optional)
+  emailjs_publicKey: '',
+  emailjs_serviceID: '',
+  emailjs_orderTemplateID: '',
+  emailjs_contactTemplateID: '',
+};
+// ════════════════════════════════════════
+
+// Populate UPI ID display
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('upi-id-display');
+  if (el) el.textContent = CONFIG.upiId;
+});
+
+// Init EmailJS
+if (CONFIG.emailjs_publicKey) {
+  emailjs.init(CONFIG.emailjs_publicKey);
+}
+
+// ─── QR MODAL ───
+function openQR() {
+  document.getElementById('qr-modal').classList.add('open');
+}
+function closeQR() {
+  document.getElementById('qr-modal').classList.remove('open');
+}
+
+// ─── MOQ CHECK ───
+const MOQ_MAP = { 'Envelopes':500, 'Paper Bags':100, 'Brochures / Leaflets':250, 'Business Cards':100, 'Letterheads':500, 'Bill Books / Notepads':50, 'Gift Packaging':100 };
+function checkMOQ() {
+  const product = document.getElementById('o-product').value;
+  const qty = parseInt(document.getElementById('o-qty').value) || 0;
+  const moq = MOQ_MAP[product];
+  const warning = document.getElementById('moq-warning');
+  const warnText = document.getElementById('moq-warning-text');
+  if (moq && qty > 0 && qty < moq) {
+    warnText.textContent = `⚠️ Minimum order for ${product} is ${moq} pcs. Your quantity (${qty}) is below MOQ — a small setup surcharge may apply.`;
+    warning.classList.add('show');
+  } else {
+    warning.classList.remove('show');
+  }
+}
+
+// ─── ORDER FORM ───
+async function submitOrder() {
+  const name    = document.getElementById('o-name').value.trim();
+  const phone   = document.getElementById('o-phone').value.trim();
+  const product = document.getElementById('o-product').value;
+  const qty     = document.getElementById('o-qty').value.trim();
+  const city    = document.getElementById('o-city').value.trim();
+
+  if (!name || !phone || !product || !qty || !city) {
+    showToast('⚠️ Please fill in all required fields (Name, Phone, Product, Quantity, City).');
+    return;
+  }
+
+  const moq = MOQ_MAP[product];
+  const belowMOQ = moq && parseInt(qty) < moq;
+
+  const orderData = {
+    name,
+    business : document.getElementById('o-business').value.trim() || '—',
+    phone,
+    email    : document.getElementById('o-email').value.trim() || '—',
+    product,
+    qty      : qty + (belowMOQ ? ` ⚠️ Below MOQ (${moq})` : ''),
+    size     : document.getElementById('o-size').value.trim() || '—',
+    city,
+    payment  : document.getElementById('o-payment').value || '—',
+    notes    : document.getElementById('o-notes').value.trim() || '—',
+    date     : new Date().toLocaleString('en-IN'),
+    status   : 'Pending'
+  };
+
+  // 1️⃣ Save to localStorage
+  const orders = JSON.parse(localStorage.getItem('ar_orders') || '[]');
+  orders.push({ id: Date.now(), ...orderData });
+  localStorage.setItem('ar_orders', JSON.stringify(orders));
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  // 2️⃣ Send Email via EmailJS
+  let emailSent = false;
+  try {
+    await emailjs.send(CONFIG.emailjs_serviceID, CONFIG.emailjs_orderTemplateID, {
+      to_name    : 'Irfan Ansari',
+      from_name  : orderData.name,
+      business   : orderData.business,
+      phone      : orderData.phone,
+      email      : orderData.email,
+      product    : orderData.product,
+      quantity   : orderData.qty,
+      size       : orderData.size,
+      city       : orderData.city,
+      payment    : orderData.payment,
+      notes      : orderData.notes,
+      order_date : orderData.date,
+    });
+    emailSent = true;
+  } catch(err) { console.warn('EmailJS error:', err); }
+
+  // 3️⃣ WhatsApp notification
+  const moqNote = belowMOQ ? `\n⚠️ *Below MOQ* (Min: ${moq} pcs — surcharge may apply)` : '';
+  const waMsg = encodeURIComponent(
+    `🛒 *New Order – AR Enterprise*\n\n` +
+    `👤 *Name:* ${orderData.name}\n` +
+    `🏢 *Business:* ${orderData.business}\n` +
+    `📞 *Phone:* ${orderData.phone}\n` +
+    `📧 *Email:* ${orderData.email}\n` +
+    `📦 *Product:* ${orderData.product}\n` +
+    `🔢 *Quantity:* ${qty}${moqNote}\n` +
+    `📐 *Size:* ${orderData.size}\n` +
+    `📍 *City:* ${orderData.city}\n` +
+    `💳 *Payment:* ${orderData.payment}\n` +
+    `📝 *Notes:* ${orderData.notes}\n` +
+    `🕐 *Date:* ${orderData.date}`
+  );
+  window.location.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${waMsg}`;
+
+  // 4️⃣ Reset
+  btn.textContent = 'Submit Enquiry →';
+  btn.disabled = false;
+  document.getElementById('order-success').style.display = 'block';
+  ['o-name','o-business','o-phone','o-email','o-qty','o-size','o-city','o-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('o-product').value = '';
+  document.getElementById('o-payment').value = '';
+  document.getElementById('moq-warning').classList.remove('show');
+  clearSelectedProduct();
+  const emailNote = emailSent ? ' + email sent' : '';
+  showToast(`✅ Order submitted! WhatsApp opened${emailNote}.`, 5000);
+  setTimeout(() => document.getElementById('order-success').style.display = 'none', 6000);
+}
+
+// ─── CONTACT FORM ───
+async function sendContact() {
+  const name = document.getElementById('c-name').value.trim();
+  const msg  = document.getElementById('c-msg').value.trim();
+  if (!name || !msg) { showToast('⚠️ Please enter your name and message.'); return; }
+
+  const contactData = {
+    name,
+    phone   : document.getElementById('c-phone').value.trim() || '—',
+    subject : document.getElementById('c-subject').value.trim() || 'General Enquiry',
+    msg,
+    date    : new Date().toLocaleString('en-IN')
+  };
+
+  // Save locally
+  const contacts = JSON.parse(localStorage.getItem('ar_contacts') || '[]');
+  contacts.push(contactData);
+  localStorage.setItem('ar_contacts', JSON.stringify(contacts));
+
+  const btn = document.querySelector('.contact-send');
+  btn.textContent = 'Opening WhatsApp…';
+  btn.disabled = true;
+
+  // Send email (optional – only if EmailJS is configured)
+  let emailSent = false;
+  if (CONFIG.emailjs_publicKey && CONFIG.emailjs_serviceID && CONFIG.emailjs_contactTemplateID) {
+    try {
+      await emailjs.send(CONFIG.emailjs_serviceID, CONFIG.emailjs_contactTemplateID, {
+        to_name   : 'Irfan Ansari',
+        from_name : contactData.name,
+        phone     : contactData.phone,
+        subject   : contactData.subject,
+        message   : contactData.msg,
+        sent_date : contactData.date,
+      });
+      emailSent = true;
+    } catch(err) {
+      console.warn('EmailJS error:', err);
+    }
+  }
+
+  // ─── Open WhatsApp with pre-filled message in a NEW TAB ───
+  const waMsg = encodeURIComponent(
+    `💬 *New Message – AR Enterprise Website*\n\n` +
+    `👤 *Name:* ${contactData.name}\n` +
+    `📞 *Phone:* ${contactData.phone}\n` +
+    `📌 *Subject:* ${contactData.subject}\n` +
+    `✉️ *Message:* ${contactData.msg}\n` +
+    `🕐 *Date:* ${contactData.date}`
+  );
+  window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${waMsg}`, '_blank');
+
+  btn.textContent = 'Send Message →';
+  btn.disabled = false;
+  ['c-name','c-phone','c-subject','c-msg'].forEach(id => document.getElementById(id).value = '');
+  const emailNote = emailSent ? ' & email sent' : '';
+  showToast(`✅ WhatsApp opened with your message${emailNote}!`);
+}
+
+// ─── COUNTER ANIMATION ───
+function animateCounter(el, target, suffix) {
+  let count = 0;
+  const step = Math.ceil(target / 40);
+  const timer = setInterval(() => {
+    count = Math.min(count + step, target);
+    el.textContent = count + suffix;
+    if (count >= target) clearInterval(timer);
+  }, 40);
+}
+
+const statsObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const nums = document.querySelectorAll('.stat-num');
+      const targets = [30, 5, 50, 100];
+      const suffixes = ['+', 'K+', '+', '%'];
+      nums.forEach((n, i) => animateCounter(n, targets[i], suffixes[i]));
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+const statsEl = document.querySelector('.hero-stats');
+if (statsEl) statsObserver.observe(statsEl);
+
+// ─── INIT ───
+initDefaultProducts();
+renderProducts();
+</script>
+
+<script>
+function orderNow(productName = "Custom Order") {
+    const message = `Hello AR Enterprise,
+
+I want to place an order.
+
+Product: ${productName}
+
+My Name:
+Phone Number:
+Quantity:
+Requirements:`;
+
+    const whatsappURL = "https://wa.me/919158840776?text=" + encodeURIComponent(message);
+    window.location.href = whatsappURL;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Convert all product order buttons
+    document.querySelectorAll(".btn-order").forEach((btn) => {
+
+        const card = btn.closest(".product-card");
+        let productName = "Custom Product";
+
+        if (card) {
+            const title = card.querySelector("h3");
+            if (title) {
+                productName = title.innerText.trim();
+            }
+        }
+
+        btn.innerText = "Order on WhatsApp";
+
+        btn.onclick = function () {
+            orderNow(productName);
+        };
+    });
+
+});
+</script>
+
+</body>
+</html>
